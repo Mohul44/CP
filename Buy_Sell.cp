@@ -1,4 +1,5 @@
 // for all values of K
+// for fee in transaction do sell[j] = max(sell[j],buy[j]+prices[i]-fee)
 class Solution {
 public:
     int maxProfit(int k, vector<int>& prices) {
