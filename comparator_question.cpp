@@ -1,4 +1,4 @@
-// Understand comparator as condition to swap a and b, a coming first as index
+// Understand comparator as condition to swap a and b, a coming first as index in priorityqueue in general a<b means a first b later
 
 class comp
 {
