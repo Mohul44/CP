@@ -77,13 +77,7 @@ void findMaxSum(int M[][COL])
 			}
 		}
 	}
-	cout << "(Top, Left) ("
-		<< finalTop << ", "
-		<< finalLeft
-		<< ")" << endl;
-	cout << "(Bottom, Right) ("
-		<< finalBottom << ", "
-		<< finalRight << ")" << endl;
+
 	cout << "Max sum is: " << maxSum << endl;
 }
 
@@ -101,5 +95,3 @@ int main()
 	return 0;
 }
 
-// This code is contributed by
-// rathbhupendra
