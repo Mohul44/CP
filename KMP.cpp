@@ -16,7 +16,7 @@ void computePrefix(vector<int>&prefix,string p){
     while(i<p.length()){
         if(p[i]==p[len]){
             len++;
-            prefix[i] = len+1;
+            prefix[i] = len;
             i++;
         }
         else{
