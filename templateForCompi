@@ -1,0 +1,316 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define ll long long
+#define ld long double
+#define pb push_back
+#define ff first
+#define ss second
+#define f(i,x,n) for(int i=x;i<(int)n;++i)
+#define vi vector<int>
+#define vvi vector<vector<int>>
+#define vvvi vector<vector<vector<int>>>
+#define prq priority_queue<int>
+#define pqs priority_queue<int,vi,greater<int>>	
+#define vpii vector<pair<int,int>>
+#define pii pair<int,int>
+#define all(x) x.begin(),x.end()
+#define sz(x) (int)x.size()
+#define mpi map<int,int>
+#define lb lower_bound 
+#define amax(a, b) a = max(a, b)
+#define amin(a, b) a = min(a, b)
+
+int mod=1e9+7;
+const int mxn=210000;
+ 
+int dx[4] = {-1,1,0,0};
+int dy[4] = {0,0,-1,1};
+
+bool checkBipartite(int cur, vector<vector<int>> &tree, int color, vi &vis)
+{
+    vis[cur] = color;
+    for (auto &ele : tree[cur])
+    {
+        if (vis[ele] == -1)
+        {
+            if (!checkBipartite(ele, tree, color ^ 1, vis))
+                return false;
+        }
+        else
+        {
+            if (vis[ele] == color)
+                return false;
+        }
+    }
+    return true;
+}
+
+string printLCS(string s1, string s2)
+{
+    int m = s1.length(),n = s2.length();
+   int L[m+1][n+1];
+   for (int i=0; i<=m; i++)
+   {
+     for (int j=0; j<=n; j++)
+     {
+       if (i == 0 || j == 0)
+         L[i][j] = 0;
+       else if (s1[i-1] == s2[j-1])
+         L[i][j] = L[i-1][j-1] + 1;
+       else
+         L[i][j] = max(L[i-1][j], L[i][j-1]);
+     }
+   }
+
+   int index = L[m][n];
+   char LCS[index+1];
+   LCS[index] = '\0'; 
+   int i = m, j = n;
+   while (i > 0 && j > 0)
+   {
+     
+      if (s1[i-1] == s2[j-1])
+      {
+          LCS[index-1] = s1[i-1]; 
+          i--; j--; index--;    
+      }
+
+      else if (L[i-1][j] > L[i][j-1])
+         i--;
+      else
+         j--;
+   }
+
+   return LCS;
+}
+
+int longestCommonSubsequence(string text1, string text2) {
+        int n = text1.length();
+        int m = text2.length();
+        int answer = 0;
+        vector<vector<int>> dp(n+1,vector<int>(m+1,0));
+        for(int i=1;i<=n;i++){
+            for(int j=1;j<=m;j++){
+                if(text1[i-1]==text2[j-1]){
+                    dp[i][j] = dp[i-1][j-1]+1;
+                }
+                dp[i][j] = max(dp[i][j],max(dp[i-1][j],dp[i][j-1]));
+            }
+        }
+        return dp[n][m];
+    }
+
+bool checkCycle(vector<bool> &vis, vector<bool> &recvis, vector<vector<int>> &prerequisites,int ind)
+{
+    vis[ind] = true;
+    recvis[ind] = true;
+    for(int i=0;i<prerequisites[ind].size();i++){
+        int node = prerequisites[ind][i];
+            if(!vis[node]){
+                if(checkCycle(vis,recvis,prerequisites,prerequisites[ind][i]))return true; 
+            }
+            else{
+                cout<<i<<node<<recvis[node]<<endl;
+                if(recvis[node])return true;
+            }
+    }
+    recvis[ind] = false;
+    return false;
+}
+
+struct custom_hash {
+    static uint64_t splitmix64(uint64_t x) {
+        x += 0x9e3779b97f4a7c15;
+        x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9;
+        x = (x ^ (x >> 27)) * 0x94d049bb133111eb;
+        return x ^ (x >> 31);
+    }
+ 
+    size_t operator()(uint64_t x) const {
+        static const uint64_t FIXED_RANDOM = chrono::steady_clock::now().time_since_epoch().count();
+        return splitmix64(x + FIXED_RANDOM);
+    }
+};
+ 
+int find_set(int x,vector<int> & par){
+    if(par[x]==x)return x;
+    return par[x] = find_set(par[x],par);
+}
+    
+void merge_set(int x, int y, vector<int> &par){
+    int par_x = find_set(x,par);
+    int par_y = find_set(y,par);
+      
+    if(par[par_x]>par[par_y]){
+        par[par_x] = par[par_y];
+    }
+    else{
+        par[par_y] = par[par_x];
+    }
+}
+
+// KMP uncomment computePrefix and KMPsearch when need to use KMP
+
+// void computePrefix(vector<int>&prefix,string p){
+//     int len = 0;
+//     int i = 1;
+//     prefix[0] = 0;
+//     while(i<p.length()){
+//         if(p[i]==p[len]){
+//             len++;
+//             prefix[i] = len;
+//             i++;
+//         }
+//         else{
+//             if(len==0){
+//                 prefix[i] = 0;
+//                 i++;
+//             }
+//             else{
+//                 len = prefix[len-1];
+//             }
+//         }
+//     }
+// }
+
+// void KMPsearch(string p,string s,vector<int> &prefix){
+//     int n = p.length();
+//     int m = s.length();
+//     int i = 0;
+//     int j = 0;
+//     vector<int> ind;
+//     while(j<m){
+//         if(p[i]==s[j]){
+//             i++;
+//             j++;
+//         }
+//         else{
+//             if(i==0){
+//                 j++;
+//                 continue;
+//             }
+//             else{
+//                 i  = prefix[i-1];
+//             }
+//         }
+//           if(i==n){
+//             ind.push_back(j-i);
+//             i = prefix[i-1];
+//         }
+//     }
+//     for(auto x : ind)cout<<x<<" ";
+//     cout<<endl;
+// }
+
+vector<int> dijkstra(vector<vector<int>> & adj, int src){
+    int n = adj.size();
+    vector<int> dis(n,INT_MAX);
+    priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>> pq;
+    dis[src] = 0;
+    pq.push({0,src});
+    while(pq.size()){
+        int d = pq.top().first;
+        int node = pq.top().second;
+        pq.pop();
+        for(auto x : adj[node]){
+            if(dis[x]>d + 1){
+                dis[x] = d+1;
+                pq.push({dis[x],x});
+            }
+        }
+    }
+    return dis;
+}
+
+vector<int> prims(vector<vector<pair<int,int>>> & adj, int src){
+    int n = adj.size();
+    vector<int> par(n,-1);
+    priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>> pq;
+    par[src] = src;
+    pq.push({0,src});
+    vector<int> key(n,INT_MAX);
+    vector<bool> vis(n,false);
+    key[src] = 0;
+    while(pq.size()){
+        int d = pq.top().first;
+        int node = pq.top().second;
+        pq.pop();
+        if(vis[node]==true)continue;
+        vis[node]= true;
+        for(auto x : adj[node]){
+            if(vis[x.first]==false && key[x.first]>x.second){
+                key[x.first] = x.second;
+                pq.push({key[x.first],x.first});
+                par[x.first] = node;
+            }
+        }
+    }
+    return par;
+}
+
+//sample comp function uncomment to use
+// class comp
+// {
+//   public:
+//     bool operator()(pair<string, int> a, pair<string, int> b)
+//     {
+//           if(a.second<b.second)return true;
+//         else if(a.second==b.second && a.first>b.first)return true;
+//         return false;
+//     }
+// };
+
+
+// Function to find the Lowest common ancestor change max accordingly
+int findLCA(int n1, int n2,vector<int> & parent)
+{
+    const int MAX = 1000;
+    vector<bool> visited(MAX, false);
+ 
+    visited[n1] = true;
+ 
+
+    while (parent[n1] != -1) {
+        visited[n1] = true;
+        n1 = parent[n1];
+    }
+ 
+    visited[n1] = true;
+
+    while (!visited[n2])
+        n2 = parent[n2];
+ 
+    return n2;
+}
+
+// uncomment when need to use segment tree and comment everything from up
+
+// const int N = 1e5;  // limit for array size
+// int n;  // array size
+// int t[2 * N];
+
+// void build() {  // build the tree
+//   for (int i = n - 1; i > 0; --i) t[i] = t[i<<1] + t[i<<1|1];
+// }
+
+// void modify(int p, int value) {  // set value at position p
+//   for (t[p += n] = value; p > 1; p >>= 1) t[p>>1] = t[p] + t[p^1];
+// }
+
+// int query(int l, int r) {  // sum on interval [l, r)
+//   int res = 0;
+//   for (l += n, r += n; l < r; l >>= 1, r >>= 1) {
+//     if (l&1) res += t[l++];
+//     if (r&1) res += t[--r];
+//   }
+//   return res;
+// }
+
+
+int main()
+{
+    cout<<"Hello World";
+    cout<<printLCS("helllo","hello");
+    return 0;
+}
