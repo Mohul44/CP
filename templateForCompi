@@ -20,6 +20,7 @@ using namespace std;
 #define lb lower_bound 
 #define amax(a, b) a = max(a, b)
 #define amin(a, b) a = min(a, b)
+#define fast std::ios_base::sync_with_stdio(false);cin.tie(0);cout.tie(0);
 
 int mod=1e9+7;
 const int mxn=210000;
